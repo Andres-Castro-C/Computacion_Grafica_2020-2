@@ -1,0 +1,181 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title> PLANETA SOLAR </title>
+    <style>
+      html, body { margin: 0; padding: 0; overflow: hidden; }
+        #info {
+                position: absolute;
+                padding: 10px;
+                width: 100%;
+                text-align: center;
+                color: #FFFFFF;
+            }
+    </style>
+  </head>
+  <body>
+      <div id="info">
+        
+            PARCIAL 1 COMPURACION GRAFICA  <br/>
+            ANDRES CASTRO  6000180 <br/>
+                       
+        </div>
+      
+        <script src="js/three.min.js"></script>
+            
+    <script>
+        
+        //VARIABLES 
+
+        var scene, aspect, camera, renderer;
+
+        init();
+        animate();
+        
+           function init() {
+                scene = new THREE.Scene();
+                aspect = window.innerWidth / window.innerHeight;
+                camera = new THREE.PerspectiveCamera(45, aspect, 0.1, 1000);
+                renderer = new THREE.WebGLRenderer();
+                renderer.setSize(window.innerWidth, window.innerHeight);
+                document.body.appendChild(renderer.domElement);
+				
+        
+			//ELEMENTOS DE ESCENA
+							  
+			var size = 50;
+			var arrowSize = 1;
+			var divisions = size;
+			var origin = new THREE.Vector3( 0, 0, 0 );
+			var x = new THREE.Vector3( 1, 0, 0 );
+			var y = new THREE.Vector3( 0, 1, 0 );
+		  	var z = new THREE.Vector3( 0, 0, 1 );
+			var color1 = new THREE.Color( 0xFFFFFF );
+		  	var color2 = new THREE.Color( 0x333333 );
+		  	var colorR = new THREE.Color( 0xAA0000 );
+		  	var colorG = new THREE.Color( 0x00AA00 );
+		  	var colorB = new THREE.Color( 0x0000AA );
+		  	var colorGd = new THREE.Color( 0x66AA66 );
+		  	
+		  
+        
+            //CREAR LAS FLECHAS QUE INDICAN LOS EJES DE COORDENADAS 3D
+            var arrowX = new THREE.ArrowHelper( x, origin, arrowSize, colorR );
+            var arrowY = new THREE.ArrowHelper( y, origin, arrowSize, colorG );
+            var arrowZ = new THREE.ArrowHelper( z, origin, arrowSize, colorB );
+
+
+
+         //----esfera Solo ---------
+        var sphereGeometryS = new THREE.SphereGeometry(10,32,32);
+        var sphereMaterialS = new THREE.MeshBasicMaterial({color: 0XFFFF00});
+        
+        
+		//----esfera Tierra ---------
+        var sphereGeometryT = new THREE.SphereGeometry(4,32,32);
+        var sphereMaterialT = new THREE.MeshBasicMaterial({color: 0X00CC33});
+
+        //----esfera Marte ---------
+        var sphereGeometryM = new THREE.SphereGeometry(4,32,32);
+        var sphereMaterialM = new THREE.MeshBasicMaterial({color: 0XFFCCCC});
+
+        //----esfera Luna---------
+        var sphereGeometryL = new THREE.SphereGeometry(4,40,40);
+        var sphereMaterialL = new THREE.MeshBasicMaterial({color: 0X0000CC});
+
+        //-----esfera Jupiter-----
+        var sphereGeometryJ = new THREE.SphereGeometry(4,40,40);
+        var sphereMaterialJ = new THREE.MeshBasicMaterial({color: 0XCCCC99});
+
+        
+        //Solor
+        
+        solar = new THREE.Mesh(sphereGeometryS,sphereMaterialS );
+            //Tierra
+        tierra = new THREE.Mesh(sphereGeometryT, sphereMaterialT);
+            //Luna 
+        luna = new THREE.Mesh(sphereGeometryL, sphereMaterialL);
+          //MARTE
+        marte = new THREE.Mesh(sphereGeometryM, sphereMaterialM);
+          //Jupiter 
+        jupiter = new THREE.Mesh(sphereGeometryJ, sphereMaterialJ);
+        
+       
+        //Pegar TODO 
+        
+             //Sistema SOLAR 
+             solar.add(tierra,marte, jupiter);
+             tierra.add(luna);
+             
+
+        //Scena
+         
+		scene.add(solar, camera,arrowX, arrowY, arrowZ);
+        
+            
+        //MOVER LA CAMARA
+			camera.position.x = 1;
+			camera.position.y = 130;	 
+		  	camera.position.z = 1;			
+		  	camera.lookAt( origin );
+        
+        //Translaciones
+
+          //Translacion Sol
+        solar.translateX(-10);
+        solar.translateY(-6)
+        solar.translateZ(2);
+
+           //Translacion Tierra
+        tierra.translateX(35);
+        tierra.translateY(8)
+        tierra.translateZ(0);
+
+         //Translacion luna 
+        luna.translateX(10);
+        luna.translateY(0);
+        luna.translateZ(0);
+
+         //Translacion Marte 
+        marte.translateX(15);
+        marte.translateY(0);
+        marte.translateZ(0);
+
+        //Translacion Jupiter 
+        jupiter.translateX(60);
+        jupiter.translateY(0);
+        jupiter.translateZ(0);
+
+
+        }
+    
+            
+        function animate() {
+                render();
+                requestAnimationFrame(animate);
+        }
+    
+			
+        function render() {
+            
+
+
+          camera.lookAt( 0, 0, 0 );
+              
+              var animate = function () {
+            requestAnimationFrame( animate );
+            renderer.render( scene, camera );
+                    tierra.rotateY(0.0005);
+                    solar.rotateY(0.00007);
+
+			};
+
+            
+            animate();
+        
+
+        }
+			
+		</script>
+	</body>
+</html>
