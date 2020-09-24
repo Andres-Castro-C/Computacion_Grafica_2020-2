@@ -20,14 +20,12 @@
         </div>
         <script src="js/three.min.js"></script>
         <script src="js/controls/OrbitControls.js"></script>
-		    <script src='js/libs/stats.min.js'></script>
         <script>
            var scene, aspect, camera, renderer, controls;
             var geometry;
             var object;
             var startTime = Date.now();
 
-			      var stats;
 
             init();
             animate();
@@ -41,11 +39,6 @@
                 document.body.appendChild(renderer.domElement);
                 controls = new THREE.OrbitControls(camera, renderer.domElement);
 				
-				        stats = new Stats();
-				        document.body.appendChild( stats.dom );
-
-               
-
                
                 //ELEMENTOS DE ESCENA
 
@@ -402,7 +395,7 @@
             function animate() {
                 render();
                 requestAnimationFrame(animate);
-				stats.update();
+				
             }
 
             function render() {
