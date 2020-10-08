@@ -19,8 +19,9 @@
         }
     </style>
 </head>
-    <div id="info">cubo CON MALLAS<br />
-   WILLIAM ANDRES - JULIANA ORDOÑEZ - CRISTIAN 
+
+    <div id="info">CILINDRO CON MALLAS<br/>
+        ANDRES CASTRO - JULIANA ORDOÑEZ - CRISTIAN" 
     </div>
 
 <body>
@@ -30,6 +31,7 @@
     <script>
         var scene, aspect, camera, renderer, controls;
         var arrays = [];
+         var cilindro;
          var cubo;
 
         init();
@@ -78,13 +80,18 @@
             var arrowY = new THREE.ArrowHelper(y, origin, arrowSize, colorG);
             var arrowZ = new THREE.ArrowHelper(z, origin, arrowSize, colorB);
 
-            // MATERIAL DEL cubo
+            // MATERIAL DEL CILINDRO
+            var matCil = new THREE.MeshBasicMaterial({ color: color2, vertexColors: THREE.FaceColors });
+
+
+
+            // MATERIAL DEL CUBO
             var matCubo = new THREE.MeshBasicMaterial({ color: color2, vertexColors: THREE.FaceColors });
             
 
             var objDatGuiOptios1={
                 Anchocubo:1,
-                Alturacubo:2,
+                Alturacubo:1,
                 CantidadDeTriangulos:1.4,
                 prueba: function(){
                     console.log(objDatGuiOptios1.Anchocubo);
@@ -184,13 +191,119 @@
 
             }
 
+            
+
+            var objDatGuiOptios={
+                CilindroRadio:1,
+                CilindroAltura:2,
+                CantidadDeTriangulos:2,
+                prueba: function(){
+                    console.log(objDatGuiOptios.CilindroRadio);
+                },
+                //CREAR LAS GEOMETRÍAS
+                dibujarCilindros: function (CilindroRadio, altura, CantidadDeTriangulos) {
+                    scene.remove(cilindro); 
+                    arrays = [];           
+
+                    var geoCilindro = new THREE.Geometry();
+                    var increRadC = 3-CantidadDeTriangulos;
+
+                    // CREAR PUNTOS CENTRALES
+                    // punto central inferior
+                    var puntoCentral = new THREE.Vector3(0, 0, 0);
+                    geoCilindro.vertices.push(puntoCentral);
+                    arrays.push(puntoCentral);
+                    // punto central superior
+                    var puntoCentral2 = new THREE.Vector3(0, altura, 0);
+                    geoCilindro.vertices.push(puntoCentral2);
+                    arrays.push(puntoCentral2);
+
+
+                    // CREA LA NUVE DE PUNTOS (2 CIRCUNFERENCIAS)
+                    for (var i = 0; i < 2 * Math.PI; i += increRadC) {
+                        for (var j = 0; j < 2; j++) {
+
+                            var punto3 = new THREE.Vector3();
+                            punto3.z = (CilindroRadio * Math.sin(i));
+                            punto3.y = (altura * j);
+                            punto3.x = (CilindroRadio * Math.cos(i));
+                            geoCilindro.vertices.push(punto3);
+
+                            arrays.push(punto3);
+                        }
+                    }
+
+                    var bandera = arrays.length; 
+                    var banderaLateral = arrays.length; 
+
+                    for (let index = 0; index < arrays.length; index++) {
+
+                        // caras base inferior
+                        if (index % 2 == 0) {
+                            if (bandera == 2) { // une cabeza y cola
+                                geoCilindro.faces.push(new THREE.Face3(bandera, 0, arrays.length - 2));
+                            } else {
+                                if (bandera > 2 && bandera < arrays.length) {
+                                    geoCilindro.faces.push(new THREE.Face3(bandera, 0, bandera - 2));
+                                }
+                            }
+                        }   // caras base superior
+                        else {
+                            if (index == arrays.length - 1) { // une cabeza y cola
+                                geoCilindro.faces.push(new THREE.Face3(arrays.length - 1, 1, bandera + 2));
+                            } else {
+                                if (index < arrays.length - 3) {
+                                    geoCilindro.faces.push(new THREE.Face3(index + 2, 1, index + 4));
+                                }
+                            }
+                        }
+                        bandera -= 1;
+
+                    }
+
+                    // CARAS LATERALES
+                    for (let index = 2; index < arrays.length; index++) {
+                        if (index + 2 < arrays.length) {
+                            geoCilindro.faces.push(new THREE.Face3(index, index + 1, index + 2));
+
+                            geoCilindro.faces.push(new THREE.Face3(banderaLateral - 1, banderaLateral - 2, banderaLateral - 3));
+                        }
+                        if (index + 2 == arrays.length) { // une cabeza y cola
+                            geoCilindro.faces.push(new THREE.Face3(3, 2, index + 1));
+                            geoCilindro.faces.push(new THREE.Face3(index, index + 1, 2));
+                        }
+                        banderaLateral--;
+                    }
+                    // AÑADIR COLOR ALEATORIO A LAS CARAS
+                    for (let index = 0; index < geoCilindro.faces.length; index++) {
+                        geoCilindro.faces[index].color.setRGB(Math.random() * 100 / 100, Math.random() * 100 / 100, Math.random() * 100 / 100);
+                    }
+                    console.log('Caras totales: ' + geoCilindro.faces.length);
+                    return geoCilindro;
+                },
+                materializarCilindro: function(){
+                    cilindro = new THREE.Mesh(objDatGuiOptios.dibujarCilindros(objDatGuiOptios.CilindroRadio, objDatGuiOptios.CilindroAltura, objDatGuiOptios.CantidadDeTriangulos), matCil);
+                    cilindro.translateX(-3);
+                    cilindro.translateY(0);
+                    cilindro.translateZ(0);
+                    scene.add(cilindro);
+                    return cilindro;
+                }
+
+            }
+
+            cilindroInicial = objDatGuiOptios.materializarCilindro();
             cuboInicial = objDatGuiOptios1.materializarcubo();
 
-            var datGuiSizeCilndro = new dat.GUI();
+            var datGuiSizeCubo = new dat.GUI();
             
-            datGuiSizeCilndro.add(objDatGuiOptios1, 'Anchocubo', 1, 3).step(0.001).name('Anchocubo').onChange(objDatGuiOptios1.materializarcubo);
-            datGuiSizeCilndro.add(objDatGuiOptios1, 'Alturacubo', 1, 10).step(0.001).name('Alturacubo').onChange(objDatGuiOptios1.materializarcubo);
-            //datGuiSizeCilndro.add(objDatGuiOptios1, 'CantidadDeTriangulos', 0.5, 2.9).step(0.00001).name('CantidadDeTriangulos').onChange(objDatGuiOptios1.materializarcubo);
+            datGuiSizeCubo.add(objDatGuiOptios, 'CilindroRadio', 1, 3).step(0.001).name('CilindroRadio').onChange(objDatGuiOptios.materializarCilindro);
+            datGuiSizeCubo.add(objDatGuiOptios, 'CilindroAltura', 1, 10).step(0.001).name('CilindroAltura').onChange(objDatGuiOptios.materializarCilindro);
+            datGuiSizeCubo.add(objDatGuiOptios, 'CantidadDeTriangulos', 2, 2.5).step(0.00001).name('CantidadDeTriangulos').onChange(objDatGuiOptios.materializarCilindro);
+
+            datGuiSizeCubo.add(objDatGuiOptios1, 'Anchocubo', 1, 3).step(0.001).name('Anchocubo').onChange(objDatGuiOptios1.materializarcubo);
+            datGuiSizeCubo.add(objDatGuiOptios1, 'Alturacubo', 1, 10).step(0.001).name('Alturacubo').onChange(objDatGuiOptios1.materializarcubo);
+
 
             scene.add(gridHelperXZ);
             scene.add(arrowX);
@@ -199,7 +312,7 @@
             //scene.remove(gridHelperYZ);
 
             camera.position.x = 5;
-            camera.position.y = 10;
+            camera.position.y = 15;
             camera.position.z = 10;
 
             camera.lookAt(origin);
