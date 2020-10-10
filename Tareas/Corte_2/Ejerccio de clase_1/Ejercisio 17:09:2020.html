@@ -20,7 +20,7 @@
         </div>
         <script src="js/three.min.js"></script>
         <script src="js/controls/OrbitControls.js"></script>
-		    <script src='js/libs/stats.min.js'></script>
+		<script src='js/libs/stats.min.js'></script>
         <script>
            var scene, aspect, camera, renderer, controls;
             var geometry;
@@ -120,7 +120,8 @@
                 //materiales creacion del objeto
                 var matPlano = new THREE.MeshBasicMaterial({ color: color1, vertexColors: THREE.FaceColors});
                 var triangulo = new THREE.Mesh (geoTriangulo, matPlano);
-
+                var material = new THREE.MeshBasicMaterial( {color: 0x00ff00} );
+                var cube = new THREE.Mesh( geometry, material );
                 ///pIRAMIDE
 
                 //AGREGAR A LA ESCENA
