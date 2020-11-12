@@ -167,8 +167,17 @@
 
             // ----- Crear el suelo -----
             var geometry = new THREE.PlaneGeometry( 300, 300, 300 );
-            var material = new THREE.MeshBasicMaterial( {color: 0x89C035, side: THREE.DoubleSide} );
-            var suelo = new THREE.Mesh( geometry, material );
+            var tuSuelo =
+			[
+			  new THREE.MeshBasicMaterial({map: new THREE.TextureLoader().load("img/8.jpg"),side: THREE.DoubleSide}),
+			  /*new THREE.MeshBasicMaterial({map: new THREE.TextureLoader().load('img/2.png'),side: THREE.DoubleSide}), 
+			  new THREE.MeshBasicMaterial({map: new THREE.TextureLoader().load('img/3.png'),side: THREE.DoubleSide}), 
+			  new THREE.MeshBasicMaterial({map: new THREE.TextureLoader().load('img/4.png'),side: THREE.DoubleSide}), 
+			  new THREE.MeshBasicMaterial({map: new THREE.TextureLoader().load('img/5.png'),side: THREE.DoubleSide}),
+			  new THREE.MeshBasicMaterial({map: new THREE.TextureLoader().load('img/6.png'),side: THREE.DoubleSide}),*/
+			];
+            //var material = new THREE.MeshBasicMaterial( {color: 0x89C035, side: THREE.DoubleSide} );
+            var suelo = new THREE.Mesh( geometry, tuSuelo );
 
             suelo.rotateOnWorldAxis ( x, THREE.Math.degToRad(0) );
             suelo.rotateOnWorldAxis ( y, THREE.Math.degToRad(90) );

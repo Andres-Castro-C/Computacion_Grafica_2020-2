@@ -28,6 +28,8 @@
 		<script src="js/controls/OrbitControls.js"></script>
 		<script src="js/csg.js"></script>
 		<script src="js/THREE.CSG.js"></script>
+		<script src="img/1.png"></script>
+
 		<script type="module">
 
 			var camera, scene, renderer,controls;
@@ -82,8 +84,12 @@
 			function init() {
 
 				camera = new THREE.PerspectiveCamera( 45, window.innerWidth / window.innerHeight, 1, 10000 );
-				camera.position.set( 500, 800, 1300 );
-				camera.lookAt( 0, 0, 0 );
+				camera.position.x = 10;
+				camera.position.y = 50;
+				camera.position.z = 200;
+				camera.lookAt(origin);
+				//camera.position.set( 500, 800, 1300 );
+				//camera.lookAt( 0, 0, 0 );
 
 			//scene = new THREE.Scene();
 			//scene.background = new THREE.Color( 0xf0f0f0 );
@@ -114,12 +120,21 @@
 
 				cubeGeo = new THREE.BoxBufferGeometry( 50, 50, 50 );
 				cubeShort = new THREE.BoxBufferGeometry(150,50,50);
+				var tuSuelo =
+					[
+					new THREE.MeshPhongMaterial({map: new THREE.TextureLoader().load("img/8.jpg"),side: THREE.DoubleSide}),
+					/*new THREE.MeshBasicMaterial({map: new THREE.TextureLoader().load('img/2.png'),side: THREE.DoubleSide}), 
+					new THREE.MeshBasicMaterial({map: new THREE.TextureLoader().load('img/3.png'),side: THREE.DoubleSide}), 
+					new THREE.MeshBasicMaterial({map: new THREE.TextureLoader().load('img/4.png'),side: THREE.DoubleSide}), 
+					new THREE.MeshBasicMaterial({map: new THREE.TextureLoader().load('img/5.png'),side: THREE.DoubleSide}),
+					new THREE.MeshBasicMaterial({map: new THREE.TextureLoader().load('img/6.png'),side: THREE.DoubleSide}),*/
+					];
 				cubeMaterial = new THREE.MeshLambertMaterial( { color: 0x666666 } );
 				cubematerial2 = new THREE.MeshLambertMaterial({color: 0xE8C8A7});
 				var cubemesh = new THREE.Mesh(cubeGeo, cubeMaterial);
 				var cilindrillo= new THREE.CylinderBufferGeometry(20,20,50,50);
 				cilindrillo.applyMatrix( new THREE.Matrix4().makeTranslation( 0,10,0) );
-				var cilindromesh= new THREE.Mesh(cilindrillo,cubeMaterial);
+				var cilindromesh= new THREE.Mesh(cilindrillo,cubematerial2);
 				var box1= new THREE.CSG.fromMesh(cubemesh);
 				var cil1=new THREE.CSG.fromMesh(cilindromesh);
 				var union1 = box1.union(cil1);
@@ -128,13 +143,13 @@
 		
 				// grid
 
-			var geometry = new THREE.PlaneGeometry( 3000, 3000, 3000 );
-            var materialSuelo = new THREE.MeshBasicMaterial( {color: 0x89C035, side: THREE.DoubleSide} );
-            var suelo = new THREE.Mesh( geometry, materialSuelo);
-            suelo.rotateOnWorldAxis ( x, THREE.Math.degToRad(0) );
-            suelo.rotateOnWorldAxis ( y, THREE.Math.degToRad(90) );
-            suelo.rotateOnWorldAxis ( z, THREE.Math.degToRad(90) );
-            scene.add(suelo);
+				var geometry = new THREE.PlaneGeometry( 3000, 3000, 3000 );
+				var materialSuelo = new THREE.MeshBasicMaterial( {color: 0x89C035, side: THREE.DoubleSide} );
+				var suelo = new THREE.Mesh( geometry, tuSuelo);
+				suelo.rotateOnWorldAxis ( x, THREE.Math.degToRad(0) );
+				suelo.rotateOnWorldAxis ( y, THREE.Math.degToRad(90) );
+				suelo.rotateOnWorldAxis ( z, THREE.Math.degToRad(90) );
+				scene.add(suelo);
 			
 
 				raycaster = new THREE.Raycaster();
